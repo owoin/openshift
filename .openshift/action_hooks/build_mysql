@@ -1,0 +1,66 @@
+#!/bin/sh
+
+install_mysql() {
+	local pkg=mysql-${MYSQL_VERSION}.tar.gz
+	
+	mkdir -p ${BUILD_DIR}
+	cd ${BUILD_DIR}
+		
+	echo "Downloading ${pkg}"
+	wget http://cdn.mysql.com/Downloads/MySQL-5.6/${pkg}
+
+	echo "Unpacking ${pkg}"
+	tar xf ${pkg}
+	cd mysql-${MYSQL_VERSION}
+	
+	echo "Configuring mysql"
+	    cmake \
+	      -DCMAKE_INSTALL_PREFIX=${ROOT_DIR}/mysql \
+	      -DMYSQL_DATADIR=${ROOT_DIR}/mysql/data \
+	      -DSYSCONFDIR=${ROOT_DIR}/mysql/etc \
+	      -DWITH_MYISAM_STORAGE_ENGINE=1 \
+	      -DWITH_INNOBASE_STORAGE_ENGINE=1 \
+	      -DWITH_MEMORY_STORAGE_ENGINE=1 \
+	      -DWITH_ARCHIVE_STORAGE_ENGINE=1 \
+	      -DWITH_PARTITION_STORAGE_ENGINE=1 \
+	      -DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
+	      -DWITH_READLINE=1 \
+	      -DENABLE_DOWNLOADS=1 \
+	      -DENABLED_LOCAL_INFILE=1 \
+	      -DMYSQL_UNIX_ADDR=${ROOT_DIR}/mysql/mysql.sock \
+	      -DMYSQL_TCP_PORT=3306 \
+	      -DEXTRA_CHARSETS=all \
+	      -DDEFAULT_CHARSET=utf8 \
+	      -DDEFAULT_COLLATION=utf8_general_ci
+
+	echo "Compiling mysql"
+	make -j 4
+	
+	echo "Installing mysql"
+	make install
+	
+	echo "Cleaning up build directory"
+	cd ..
+	cd ..
+	rm -rf ${BUILD_DIR}
+}
+
+check_mysql() {
+
+	local mysql_bin=${ROOT_DIR}/mysql/bin/control
+	
+	if [ ! -e "${mysql_bin}" ]; then
+		echo "mysql is not installed"
+		install_mysql
+	else
+		local mysql_version=`${mysql_bin} -v | head -n 1 | grep -o [0-9.]*`
+		
+		if [ "$MYSQL_VERSION}" != "${mysql_version}" ]; then
+			echo "Installed mysql is old, version: ${mysql_version}"
+			install_mysql
+		else
+			echo "mysql is up to date, version: ${mysql_version}"
+		fi
+	fi
+
+}
