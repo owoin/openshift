@@ -8,9 +8,11 @@ set -e
 . ${AH_DIR}/build_yaf_ext
 . ${AH_DIR}/build_phalcon_ext
 . ${AH_DIR}/build_mongo_driver
+. ${AH_DIR}/build_mysql
 
 check_httpd
 check_php
+check_mysql
 
 check_yaf_ext # php extension
 #check_phalcon_ext # php extension
