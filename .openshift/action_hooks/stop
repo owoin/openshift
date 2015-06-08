@@ -25,3 +25,8 @@ if pgrep php-fpm > /dev/null; then
 	echo "Killing php-fpm"
 	kill -s 9 `pgrep php-fpm` || true
 fi
+
+if pgrep ruby > /dev/null; then
+	echo "Killing ruby"
+	kill -s 9 `pgrep ruby` || true
+fi
