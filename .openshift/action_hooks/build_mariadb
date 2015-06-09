@@ -14,25 +14,7 @@ install_mariadb() {
 	cd mariadb-${MARIADB_VERSION}
 	
 	echo "Configuring mariadb"
-	    cmake \
-	      -DCMAKE_INSTALL_PREFIX=${ROOT_DIR}/mariadb \
-	      -Dmariadb_DATADIR=${ROOT_DIR}/mariadb/data \
-	      -DSYSCONFDIR=${ROOT_DIR}/mariadb/etc \
-	      -DWITH_MYISAM_STORAGE_ENGINE=1 \
-	      -DWITH_INNOBASE_STORAGE_ENGINE=1 \
-	      -DWITH_MEMORY_STORAGE_ENGINE=1 \
-	      -DWITH_ARCHIVE_STORAGE_ENGINE=1 \
-	      -DWITH_PARTITION_STORAGE_ENGINE=1 \
-	      -DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
-	      -DWITH_READLINE=1 \
-	      -DENABLE_DOWNLOADS=1 \
-	      -DENABLED_LOCAL_INFILE=1 \
-	      -Dmariadb_UNIX_ADDR=${$TMP_DIR}/mariadb.sock \
-	      -Dmariadb_TCP_PORT=3306 \
-	      -DEXTRA_CHARSETS=all \
-	      -DDEFAULT_CHARSET=utf8 \
-	      -DDEFAULT_COLLATION=utf8_general_ci
-
+	cmake -DCMAKE_INSTALL_PREFIX=${ROOT_DIR}/mariadb -Dmariadb_DATADIR=${ROOT_DIR}/mariadb/data -DSYSCONFDIR=${ROOT_DIR}/mariadb/etc -Dmariadb_UNIX_ADDR=${OPENSHIFT_TMP_DIR%/}/mariadb.sock
 	echo "Compiling mariadb"
 	make -j 4
 	
