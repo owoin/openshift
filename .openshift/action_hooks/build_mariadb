@@ -27,7 +27,7 @@ install_mariadb() {
 	      -DWITH_READLINE=1 \
 	      -DENABLE_DOWNLOADS=1 \
 	      -DENABLED_LOCAL_INFILE=1 \
-	      -Dmariadb_UNIX_ADDR=${ROOT_DIR}/mariadb/mariadb.sock \
+	      -Dmariadb_UNIX_ADDR=${$TMP_DIR}/mariadb.sock \
 	      -Dmariadb_TCP_PORT=3306 \
 	      -DEXTRA_CHARSETS=all \
 	      -DDEFAULT_CHARSET=utf8 \
