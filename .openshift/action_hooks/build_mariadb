@@ -1,0 +1,66 @@
+#!/bin/sh
+
+install_mariadb() {
+	local pkg=mariadb-${MARIADB_VERSION}.tar.gz
+	
+	mkdir -p ${BUILD_DIR}
+	cd ${BUILD_DIR}
+		
+	echo "Downloading ${pkg}"
+	wget https://downloads.mariadb.org/interstitial/mariadb-10.0.19/source/${pkg}
+
+	echo "Unpacking ${pkg}"
+	tar xf ${pkg}
+	cd mariadb-${MARIADB_VERSION}
+	
+	echo "Configuring mariadb"
+	    cmake \
+	      -DCMAKE_INSTALL_PREFIX=${ROOT_DIR}/mariadb \
+	      -Dmariadb_DATADIR=${ROOT_DIR}/mariadb/data \
+	      -DSYSCONFDIR=${ROOT_DIR}/mariadb/etc \
+	      -DWITH_MYISAM_STORAGE_ENGINE=1 \
+	      -DWITH_INNOBASE_STORAGE_ENGINE=1 \
+	      -DWITH_MEMORY_STORAGE_ENGINE=1 \
+	      -DWITH_ARCHIVE_STORAGE_ENGINE=1 \
+	      -DWITH_PARTITION_STORAGE_ENGINE=1 \
+	      -DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
+	      -DWITH_READLINE=1 \
+	      -DENABLE_DOWNLOADS=1 \
+	      -DENABLED_LOCAL_INFILE=1 \
+	      -Dmariadb_UNIX_ADDR=${ROOT_DIR}/mariadb/mariadb.sock \
+	      -Dmariadb_TCP_PORT=3306 \
+	      -DEXTRA_CHARSETS=all \
+	      -DDEFAULT_CHARSET=utf8 \
+	      -DDEFAULT_COLLATION=utf8_general_ci
+
+	echo "Compiling mariadb"
+	make -j 4
+	
+	echo "Installing mariadb"
+	make install
+	
+	echo "Cleaning up build directory"
+	cd ..
+	cd ..
+	rm -rf ${BUILD_DIR}
+}
+
+check_mariadb() {
+
+	local mariadb_bin=${ROOT_DIR}/mariadb/bin/control
+	
+	if [ ! -e "${mariadb_bin}" ]; then
+		echo "mariadb is not installed"
+		install_mariadb
+	else
+		local mariadb_version=`${mariadb_bin} -v | head -n 1 | grep -o [0-9.]*`
+		
+		if [ "$MARIADB_VERSION}" != "${mariadb_version}" ]; then
+			echo "Installed mariadb is old, version: ${mariadb_version}"
+			install_mariadb
+		else
+			echo "mariadb is up to date, version: ${mariadb_version}"
+		fi
+	fi
+
+}
