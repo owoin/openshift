@@ -1,0 +1,11 @@
+cd $OPENSHIFT_TMP_DIR
+wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.37.tar.bz2
+tar jxf pcre-8.37.tar.bz2
+
+wget http://nginx.org/download/nginx-1.9.1.tar.gz  
+tar zxf nginx-1.9.1.tar.gz 
+
+cd nginx-1.9.1
+./configure --prefix=$OPENSHIFT_DIY_DIR/program/nginx --with-pcre=$OPENSHIFT_TMP_DIR/pcre-8.37
+make
+make install
