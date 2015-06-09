@@ -1,4 +1,4 @@
-httpd 2.4.12 + php 5.6.9  + mysql 5.6.25 on OpenShift
+httpd 2.4.12 + php 5.6.9  + MariaDB 10.0.19 on OpenShift
 ============================
 
 1. cd 进 .openshift/action_hooks
