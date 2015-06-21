@@ -3,7 +3,6 @@
 set -e
 
 . ${OPENSHIFT_REPO_DIR}/.openshift/action_hooks/config
-. ${AH_DIR}/build_mariadb
 . ${AH_DIR}/build_httpd
 #. ${AH_DIR}/build_php
 . ${AH_DIR}/build_yaf_ext
@@ -13,7 +12,7 @@ set -e
 
 check_mariadb
 check_httpd
-check_php
+# check_php
 
 check_yaf_ext # php extension
 #check_phalcon_ext # php extension
