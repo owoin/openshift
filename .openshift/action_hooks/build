@@ -5,7 +5,7 @@ set -e
 . ${OPENSHIFT_REPO_DIR}/.openshift/action_hooks/config
 . ${AH_DIR}/build_mariadb
 . ${AH_DIR}/build_httpd
-. ${AH_DIR}/build_php
+#. ${AH_DIR}/build_php
 . ${AH_DIR}/build_yaf_ext
 . ${AH_DIR}/build_phalcon_ext
 . ${AH_DIR}/build_mongo_driver
